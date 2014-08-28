@@ -1,0 +1,6 @@
+#!/bin/sh
+scen=harvest_defense
+for fac in egypt indian magic norsemen persian romans tech
+do
+    mkdir -p $fac/$scen/$scen/$fac/
+done

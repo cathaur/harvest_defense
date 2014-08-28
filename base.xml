@@ -1,28 +1,30 @@
 <scenario>
 	<difficulty value="4"/>
 	<tech-tree value="megapack"/>
-	<map value="harvest_defense"/>
+	<map value="harvest_defense_selection"/>
 	<tileset value="winter_forest"/>
 	<players>
 		<player control="human" faction="tech" team="1"/>
-		<player control="cpu" faction="egypt" team="2"/>
-		<player control="cpu" faction="indian" team="3"/>
-		<player control="cpu" faction="magic" team="4"/>
-		<player control="cpu" faction="norsemen" team="5"/>
-		<player control="cpu" faction="persian" team="6"/>
-		<player control="cpu" faction="romans" team="7"/>
-		<player control="cpu" faction="tech" team="8"/>
+		<player control="cpu" faction="egypt" team="1"/>
+		<player control="cpu" faction="indian" team="1"/>
+		<player control="cpu" faction="magic" team="1"/>
+		<player control="cpu" faction="norsemen" team="1"/>
+		<player control="cpu" faction="persian" team="1"/>
+		<player control="cpu" faction="romans" team="1"/>
+		<player control="cpu" faction="tech" team="1"/>
 	</players>
 	<default-resources value="false"/>
 	<default-units value="false"/>
 	<default-victory-conditions value="false"/>
 	<scripts>
-		<global>
-			<!--config.lua-->
-			<!--global.lua-->
-		</global>
-		<unitDied>
---			unitDied()
-		</unitDied>
+		<startup>
+STARTUP
+		</startup>
+		<unitAttacked>
+			unitAttacked()
+		</unitAttacked>
+		<timerTriggerEvent>
+			timerTriggerEvent()
+        </timerTriggerEvent>
 	</scripts>
 </scenario>

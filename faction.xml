@@ -1,0 +1,19 @@
+<scenario>
+	<difficulty value="4"/>
+	<tech-tree value="megapack"/>
+	<map value="harvest_defense"/>
+	<tileset value="winter_forest"/>
+	<players>
+		<player control="human" faction="FACTION" team="1"/>
+		<player control="cpu" faction="egypt" team="2"/>
+		<player control="cpu" faction="indian" team="2"/>
+		<player control="cpu" faction="magic" team="2"/>
+		<player control="cpu" faction="norsemen" team="2"/>
+		<player control="cpu" faction="persian" team="2"/>
+		<player control="cpu" faction="romans" team="2"/>
+		<player control="cpu" faction="tech" team="2"/>
+	</players>
+	<default-resources value="false"/>
+	<default-units value="false"/>
+	<default-victory-conditions value="false"/>
+</scenario>
