@@ -1,0 +1,20 @@
+***CURRENTLY A WORK IN PROGRESS***
+
+Intended description of the scenario, when it is done:
+
+This is a scenario for MegaGlest.  It uses the Megapack techtree.
+
+This scenario known to work with MegaGlest version 3.9.1 on GNU/Linux.
+It probably also works on other operating systems, but the author
+hasn't tested them.
+
+The goal of this scenario is to have a bunch of resources stored
+(10000 gold, 7500 stone, 7500 wood) as fast as possible.  You need
+these resources in order to build the Intangible MacGuffin (which does
+not actually exist, but pretend that it does).
+
+At the same time, however, you will be attacked by enemies, so you
+will have to spend resources on defenses; the difficulty of the enemy
+attacks is dependent on the number of workers you have.  Thus, as you
+get more workers, the game is more difficult.  The difficulty also
+increases over time.
