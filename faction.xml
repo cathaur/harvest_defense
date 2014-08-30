@@ -16,4 +16,5 @@
 	<default-resources value="false"/>
 	<default-units value="false"/>
 	<default-victory-conditions value="false"/>
+	<fog-of-war value="true"/>
 </scenario>

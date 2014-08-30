@@ -23,12 +23,19 @@ factions = {
    "egypt","indian","magic","norsemen","persian","romans","tech"
 }
 
+faction_index = {
+   ["egypt"]=1, ["indian"]=2, ["magic"]=3, ["norsemen"]=4,
+   ["persian"]=5, ["romans"]=6, ["tech"]=7
+}
+
 function attacked_unit_choice()
    local faction_no=unitFaction(lastAttackedUnit())
    local faction_name = factions[faction_no]
    local scenario_name = "harvest_defense"
    next_scenario=scenario_name .. "/" .. faction_name .. "/" .. scenario_name
    local frames=getWorldFrameCount()
+   --world frame count is preserved on loadScenario
+   --Use it as a covert channel to pass faction info between scenarios.
    next_scenario_load_frame=frames + (faction_no-1 - frames)%7
    startTimerEvent()
 end
@@ -58,16 +65,19 @@ function initialize_scenario()
       for _=1,9 do
          putAtBase("slave")
       end
+      for _=1,4 do
+         putAtBase("chicken")
+      end
    end
    function init.indian()
       putAtBase("mainteepee")
-      for _=1,9 do
+      for _=1,12 do
          putAtBase("worker")
       end
    end
    function init.magic()
       putAtBase("mage_tower")
-      for _=1,9 do
+      for _=1,12 do
          putAtBase("initiate")
       end
    end
@@ -76,34 +86,91 @@ function initialize_scenario()
       for _=1,9 do
          putAtBase("thrull")
       end
+      putAtBase("cow")
+      putAtBase("cow")
    end
    function init.persian()
       putAtBase("palace")
       for _=1,9 do
          putAtBase("worker")
       end
+      putAtBase("sheep")
+      putAtBase("sheep")
    end
    function init.romans()
       putAtBase("forum")
       for _=1,9 do
          putAtBase("slave")
       end
+      putAtBase("cow")
    end
    function init.tech()
       putAtBase("castle")
       for _=1,9 do
          putAtBase("worker")
       end
+      putAtBase("cow")
+      putAtBase("cow")
    end
    init[faction_name]()
-   
-   -- pausing is necessary for the game to catch up to the "world frame"
+   giveResource("gold",0,800)
+   giveResource("stone",0,800)
+   giveResource("wood",0,800)
+   if not (faction_name=="indian" or faction_name=="magic")
+   then
+      giveResource("food",0,1)
+   end
+   for i=2,7 do
+      disableAi(i)
+      disableConsume(i)
+   end
+   event_functions={}
+   local wave_timer=startEfficientTimerEvent(4*60)
+   event_functions[wave_timer]=wave_event
+
    togglePauseGame(1)
 end
 
+function wave_event(timer)
+   local wave_timer=startEfficientTimerEvent(4*60)
+   event_functions[timer]=nil
+   event_functions[wave_timer]=wave_event
+   local frame=getWorldFrameCount()
+   frame=frame-base_frame
+   local seconds=frame/40
+   send_wave(math.floor(seconds))
+end
+
+function makeEnemy(faction, unit)
+   createUnitNoSpacing(unit, faction_index[faction], startLocation(7))
+   local unit=lastCreatedUnit()
+   givePositionCommand(unit, "attack", startLocation(0))
+end
+
+function send_wave(difficulty)
+   -- for now, difficulty is just the time since start
+   -- send 1 indian firearcher and 1 anubis for each 40 seconds
+   for i=1,math.floor(difficulty/40)
+   do
+      makeEnemy("egypt", "anubis_warrior")
+      makeEnemy("indian", "fire_archer")
+   end
+end
+
+function scenario_event()
+   local trigger=triggeredTimerEventId()
+   return event_functions[trigger](trigger)
+end
+
+-- function unitDied()
+--    if unitCount(0)==0
+--    then
+--       endGame()
+--    end
+-- end
+
 --determine which scenario this is
 --getWorldFrameCount() is nonzero for the second stage
---use startLocation(0) to determine which xml and map was loaded
 if getWorldFrameCount()==0
 then
    initialize_choice()
@@ -112,5 +179,5 @@ then
 else
    initialize_scenario()
    unitAttacked=no_action
-   timerTriggerEvent=no_action
+   timerTriggerEvent=scenario_event
 end
