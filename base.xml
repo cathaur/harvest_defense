@@ -23,6 +23,9 @@ STARTUP
 		<unitAttacked>
 			unitAttacked()
 		</unitAttacked>
+		<unitDied>
+			unitDied()
+		</unitDied>
 		<timerTriggerEvent>
 			timerTriggerEvent()
         </timerTriggerEvent>

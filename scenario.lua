@@ -61,7 +61,8 @@ function initialize_scenario()
       createUnit(unit, 0, startLocation(0))
    end
    function init.egypt()
-      putAtBase("pyramid")
+      main_building="pyramid"
+      putAtBase(main_building)
       for _=1,9 do
          putAtBase("slave")
       end
@@ -70,19 +71,22 @@ function initialize_scenario()
       end
    end
    function init.indian()
-      putAtBase("mainteepee")
+      main_building="mainteepee"
+      putAtBase(main_building)
       for _=1,12 do
          putAtBase("worker")
       end
    end
    function init.magic()
-      putAtBase("mage_tower")
+      main_building="mage_tower"
+      putAtBase(main_building)
       for _=1,12 do
          putAtBase("initiate")
       end
    end
    function init.norsemen()
-      putAtBase("castle")
+      main_building="castle"
+      putAtBase(main_building)
       for _=1,9 do
          putAtBase("thrull")
       end
@@ -90,7 +94,8 @@ function initialize_scenario()
       putAtBase("cow")
    end
    function init.persian()
-      putAtBase("palace")
+      main_building="palace"
+      putAtBase(main_building)
       for _=1,9 do
          putAtBase("worker")
       end
@@ -98,14 +103,16 @@ function initialize_scenario()
       putAtBase("sheep")
    end
    function init.romans()
-      putAtBase("forum")
+      main_building="forum"
+      putAtBase(main_building)
       for _=1,9 do
          putAtBase("slave")
       end
       putAtBase("cow")
    end
    function init.tech()
-      putAtBase("castle")
+      main_building="castle"
+      putAtBase(main_building)
       for _=1,9 do
          putAtBase("worker")
       end
@@ -138,7 +145,11 @@ function wave_event(timer)
    local frame=getWorldFrameCount()
    frame=frame-base_frame
    local seconds=frame/40
-   send_wave(math.floor(seconds))
+   print(isGameOver())
+   if isGameOver()==0
+   then
+      send_wave(math.floor(seconds))
+   end
 end
 
 function makeEnemy(faction, unit)
@@ -149,8 +160,8 @@ end
 
 function send_wave(difficulty)
    -- for now, difficulty is just the time since start
-   -- send 1 indian firearcher and 1 anubis for each 40 seconds
-   for i=1,math.floor(difficulty/40)
+   -- send 1 indian firearcher and 1 anubis for each 60 seconds
+   for i=1,math.floor(difficulty/60)
    do
       makeEnemy("egypt", "anubis_warrior")
       makeEnemy("indian", "fire_archer")
@@ -162,12 +173,22 @@ function scenario_event()
    return event_functions[trigger](trigger)
 end
 
--- function unitDied()
---    if unitCount(0)==0
---    then
---       endGame()
---    end
--- end
+function unitDied()
+   if unitCountOfType(0,main_building)==0
+   then
+      endGame()
+   end
+end
+
+function resourceHarvested()
+   if resourceAmount("gold",0)>=10000 and
+      resourceAmount("stone",0)>=7500 and
+      resourceAmount("wood",0)>=7500
+   then
+      setPlayerAsWinner(0)
+      endGame()
+   end
+end
 
 --determine which scenario this is
 --getWorldFrameCount() is nonzero for the second stage
