@@ -62,9 +62,10 @@ function initialize_scenario()
    end
    function init.egypt()
       main_building="pyramid"
+      worker="slave"
       putAtBase(main_building)
       for _=1,9 do
-         putAtBase("slave")
+         putAtBase(worker)
       end
       for _=1,4 do
          putAtBase("chicken")
@@ -72,49 +73,55 @@ function initialize_scenario()
    end
    function init.indian()
       main_building="mainteepee"
+      worker="worker"
       putAtBase(main_building)
       for _=1,12 do
-         putAtBase("worker")
+         putAtBase(worker)
       end
    end
    function init.magic()
       main_building="mage_tower"
+      worker="initiate"
       putAtBase(main_building)
       for _=1,12 do
-         putAtBase("initiate")
+         putAtBase(worker)
       end
    end
    function init.norsemen()
       main_building="castle"
+      worker="thrull"
       putAtBase(main_building)
       for _=1,9 do
-         putAtBase("thrull")
+         putAtBase(worker)
       end
       putAtBase("cow")
       putAtBase("cow")
    end
    function init.persian()
       main_building="palace"
+      worker="worker"
       putAtBase(main_building)
       for _=1,9 do
-         putAtBase("worker")
+         putAtBase(worker)
       end
       putAtBase("sheep")
       putAtBase("sheep")
    end
    function init.romans()
       main_building="forum"
+      worker="slave"
       putAtBase(main_building)
       for _=1,9 do
-         putAtBase("slave")
+         putAtBase(worker)
       end
       putAtBase("cow")
    end
    function init.tech()
       main_building="castle"
+      worker="worker"
       putAtBase(main_building)
       for _=1,9 do
-         putAtBase("worker")
+         putAtBase(worker)
       end
       putAtBase("cow")
       putAtBase("cow")
@@ -145,10 +152,13 @@ function wave_event(timer)
    local frame=getWorldFrameCount()
    frame=frame-base_frame
    local seconds=frame/40
-   print(isGameOver())
    if isGameOver()==0
    then
-      send_wave(math.floor(seconds))
+      --if a worker on average makes 1.5 resource/sec and an average unit
+      --costs 200 resource, then in 4 minutes the worker makes 1-2 units.
+      --but player also has to make other stuff, and face multiple waves
+      --send 0.5 unit per worker plus 1 unit per minute
+      send_wave(seconds/60+unitCountOfType(0,worker)/2)
    end
 end
 
@@ -161,10 +171,11 @@ end
 function send_wave(difficulty)
    -- for now, difficulty is just the time since start
    -- send 1 indian firearcher and 1 anubis for each 60 seconds
-   for i=1,math.floor(difficulty/60)
+   while difficulty > 0
    do
       makeEnemy("egypt", "anubis_warrior")
-      makeEnemy("indian", "fire_archer")
+      makeEnemy("indian", "fire_archer")      
+      difficulty=difficulty-2
    end
 end
 
